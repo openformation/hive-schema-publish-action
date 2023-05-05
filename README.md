@@ -33,6 +33,7 @@ jobs:
 | Name | Required | Description | Default |
 |---|---|---|---|
 | `service-name` | *Required* | Name of the service in Hive | None |
+| `service-url` | *Required* | URL of the service GraphQL endpoint | None |
 | `schema-path` | *Required* | Path to the .graphql schema file within the repository | None |
 | `hive-registry-access-token` | *Required* | Hive registry access token. Make sure it has permission to publish schemas. | None |
 | `comment-pr` | *Optional* | Enables commenting schema check results on PR | `true` |

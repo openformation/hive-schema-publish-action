@@ -2,7 +2,7 @@
 
 Use this action to publish changes in your schema to GraphQL Hive using the Hive CLI. Goes together well with [openformation/hive-schema-check-action](https://github.com/openformation/hive-schema-check-action).
 
-> :warning: **Warning**: Running `hive schema:publish` (which is what this action does) automatically uses the `--force` flag. This means that breaking changes will be published *no matter what*. Run a [check](https://github.com/openformation/hive-schema-check-action) before using this action.
+> :warning: Running `hive schema:publish` (which is what this action does) automatically uses the `--force` flag. This means that breaking changes will be published *no matter what*. Run a [check](https://github.com/openformation/hive-schema-check-action) before using this action.
 ## Usage
 ```yaml
 on: pull_request

@@ -1,11 +1,26 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Publish schema to GraphQL Hive'
+description: 'Publishes a schema to GraphQL Hive schema repository'
+author: 'Open Formation GmbH'
 inputs:
-  milliseconds: # change this
+  service-name:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'Name of the service in Hive'
+  service-url:
+    required: true
+    description: 'URL of the service endpoint'
+  schema-path:
+    required: true
+    description: 'Path to the .graphql schema file'
+  hive-registry-access-token:
+    required: true
+    description: 'Hive registry access token'
+  comment-pr:
+    required: false
+    default: "true"
+    description: 'Option to enable commenting schema publish results on PR, defaults to true'
+  github-token:
+    required: true
+    description: 'Github token to use when commenting on PRs'
 runs:
   using: 'node16'
   main: 'dist/index.js'

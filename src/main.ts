@@ -1,7 +1,6 @@
 import * as core from '@actions/core'
 import {existsSync} from 'fs'
 import {execa} from 'execa'
-import * as github from '@actions/github'
 
 async function run(): Promise<void> {
   try {
@@ -26,15 +25,6 @@ async function run(): Promise<void> {
     })
     if (!registryToken || registryToken.length === 0) {
       throw new Error('Input "hive-registry-access-token" is required')
-    }
-
-    const shouldCommentPR = core.getBooleanInput('comment-pr')
-
-    const githubToken = core.getInput('github-token', {required: false})
-    if (shouldCommentPR && (!githubToken || githubToken.length === 0)) {
-      throw new Error(
-        'Input "github-token" is required when PR comments are enabled'
-      )
     }
 
     const registryEndpoint = 'https://registry.hive.openformation.io/graphql'
@@ -74,22 +64,6 @@ async function run(): Promise<void> {
     )
 
     core.debug(result)
-
-    const pullNumber = github.context.payload.pull_request?.number
-    if (pullNumber && shouldCommentPR) {
-      const message = `## Hive schema publish result\n${result}`
-
-      const octokit = github.getOctokit(githubToken)
-      try {
-        await octokit.rest.issues.createComment({
-          ...github.context.repo,
-          issue_number: pullNumber,
-          body: message
-        })
-      } catch (error) {
-        throw new Error('Failed to comment on PR')
-      }
-    }
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }

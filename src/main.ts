@@ -1,22 +1,22 @@
 import * as core from '@actions/core'
-import { existsSync } from 'fs'
-import { execa } from 'execa'
+import {existsSync} from 'fs'
+import {execa} from 'execa'
 import * as github from '@actions/github'
 
 async function run(): Promise<void> {
   try {
     // Inputs
-    const serviceName = core.getInput('service-name', { required: true })
+    const serviceName = core.getInput('service-name', {required: true})
     if (!serviceName || serviceName.length === 0) {
       throw new Error('Input "service-name" is required')
     }
 
-    const serviceUrl = core.getInput('service-url', { required: true })
+    const serviceUrl = core.getInput('service-url', {required: true})
     if (!serviceUrl || serviceUrl.length === 0) {
       throw new Error('Input "service-url" is required')
     }
-    
-    const schemaPath = core.getInput('schema-path', { required: true })
+
+    const schemaPath = core.getInput('schema-path', {required: true})
     if (!schemaPath || schemaPath.length === 0) {
       throw new Error('Input "schema-path" is required')
     }
@@ -30,7 +30,7 @@ async function run(): Promise<void> {
 
     const shouldCommentPR = core.getBooleanInput('comment-pr')
 
-    const githubToken = core.getInput('github-token', { required: false })
+    const githubToken = core.getInput('github-token', {required: false})
     if (shouldCommentPR && (!githubToken || githubToken.length === 0)) {
       throw new Error(
         'Input "github-token" is required when PR comments are enabled'
@@ -54,7 +54,7 @@ async function run(): Promise<void> {
     core.debug('Hive CLI installed')
 
     // Publish schema
-    const { stdout: result } = await execa(
+    const {stdout: result} = await execa(
       'hive',
       [
         'schema:publish',
@@ -69,7 +69,7 @@ async function run(): Promise<void> {
       {
         env: {
           HIVE_TOKEN: registryToken
-        },
+        }
       }
     )
 

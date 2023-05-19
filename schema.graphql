@@ -1,0 +1,119 @@
+#graphql
+extend schema @link(url: "https://specs.apollo.dev/federation/v2.0" import: ["@key", "@shareable"])
+
+scalar Date
+
+enum CacheControlScope {
+  PUBLIC
+  PRIVATE
+}
+
+directive @cacheControl(
+  maxAge: Int
+  scope: CacheControlScope
+  inheritMaxAge: Boolean
+) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
+
+# TODO: determine types in use
+enum ImageType {
+  FULL_FIGURE
+  LEGER
+  OTHER
+  CATALOG
+  AMBIENTE
+}
+
+enum TargetGroup {
+  WOMEN
+  MEN
+  KIDS
+  UNISEX
+}
+
+enum Feature {
+  SUSTAINABLE
+}
+
+enum ProductGroup {
+  APPAREL
+  OTHER
+}
+
+type Image {
+  id: String!
+  path: String!
+  imageType: ImageType
+}
+
+type Brand {
+  name: String!
+  logo: Image
+}
+
+type Currency {
+  code: String
+  text: String
+}
+
+type Price {
+  currency: Currency
+  value: Int
+}
+
+enum AvailabilityStatus {
+  AVAILABLE
+  UNAVAILABLE
+  OUTOFSTOCK
+  TEMP
+}
+
+type Availability {
+  deliverable: Boolean
+  stock: Int
+  status: AvailabilityStatus
+  text: String
+}
+
+# The product gets cached for 8 hours
+type Product @key(fields: "id") @cacheControl(maxAge: 28800) {
+  id: ID!
+  name: String!
+  teaserImage: Image!
+  shop: Shop!
+  description: String!
+  publishDate: Date
+  targetGroups: [TargetGroup]
+  features: [Feature]
+  aggregatedAvailability: Availability
+  variants(color: String, size: String, attribute: String): [ProductVariant]
+  fromPrice(color: String, size: String, attribute: String): Price
+}
+
+type Shop @key(fields: "id", resolvable: false) {
+  id: ID!
+}
+
+type ProductVariant @key(fields: "id") {
+  id: ID!
+  # reference back to parent product, useful in federation
+  parentProduct: Product!
+  attribute: String
+  color: String!
+  size: String!
+  availability: Availability
+  price: Price!
+  formerPrice: Price
+  # suggested retail price / UVP
+  srp: Price
+}
+
+type ProductVariantSizeGroup @key(fields: "id") {
+  id: ID! # itemNumber/Artikelnummer
+  parentProduct: Product!
+  variants: [ProductVariant]!
+}
+
+type Query {
+  products: [Product]
+  product(id: String!): Product
+}

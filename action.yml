@@ -14,13 +14,6 @@ inputs:
   hive-registry-access-token:
     required: true
     description: 'Hive registry access token'
-  comment-pr:
-    required: false
-    default: "true"
-    description: 'Option to enable commenting schema publish results on PR, defaults to true'
-  github-token:
-    required: true
-    description: 'Github token to use when commenting on PRs'
 runs:
   using: 'node16'
   main: 'dist/index.js'
